@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 # from typing import List, Dict, Union
 
-BASE_DIR = Path(__file__).resolve().parent
+# BASE_DIR = Path(__file__).resolve().parent
 
 class FileWorker:
     def __init__(self, filename, mode):
@@ -18,26 +18,24 @@ class FileWorker:
 
     def __exit__(self, exc_type, exc, tb):
         self.file.close()
-
         if exc_type is not None:
             print(f"Ошибка при выходе из файла: {exc_type}")
-
         return True
 
 
+def get_file_path(filename):
+    return Path(__file__).resolve().parent / "tmpdata" / filename
+
 def json_read(filename):
-    file_path = BASE_DIR / "tmpdata" / filename
-    with FileWorker(file_path, "r") as f:
+    with FileWorker(get_file_path(filename), "r") as f:
         return json.load(f)
 
 def json_write(filename, data):
-    file_path = BASE_DIR / "tmpdata" / filename
-    with FileWorker(file_path, "w") as f:
+    with FileWorker(get_file_path(filename), "w") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def csv_read(filename):
-    file_path = BASE_DIR / "tmpdata" / filename
-    with FileWorker(file_path, "r") as f:
+    with FileWorker(get_file_path(filename), "r") as f:
         reader = csv.DictReader(f)
         return list(reader)
 
